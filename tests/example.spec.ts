@@ -219,7 +219,7 @@ async function acessarTransferenciaPeloMenu(page: Page) {
 }
 
 test.describe('Novos testes de transferência', () => {
-  test('Preencher a transferência com o número da conta coletado', async ({ page }) => {
+  test('Realizar tranferencia para a propria conta', async ({ page }) => {
     await login(page);
     const conta = (await page.getByText(/Conta digital: \d+-\d+/).textContent())?.match(/(\d+)-(\d+)/);
     if (!conta) throw new Error('Número da conta não encontrado na home');
