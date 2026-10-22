@@ -40,7 +40,7 @@ transferências, validações de entrada e visibilidade de elementos da interfac
 - Realizar login com a conta criada.
 - Confirmar a exibição do saldo inicial de **R$ 1.000,00**.
 
-Ao todo, o arquivo `tests/example.spec.ts` contém 8 cenários. Como a
+Ao todo, o arquivo `tests/atividade.spec.ts` contém 8 cenários. Como a
 configuração executa cada cenário em Chromium, Firefox e WebKit, a suíte
 resulta em 24 execuções de teste.
 
@@ -103,7 +103,7 @@ npx playwright test --project=webkit
 Para executar um arquivo específico:
 
 ```bash
-npx playwright test tests/example.spec.ts
+npx playwright test tests/atividade.spec.ts
 ```
 
 ## Relatório de execução
@@ -125,7 +125,7 @@ arquivos de trace para auxiliar na investigação do cenário.
 ├── image.png
 ├── playwright.config.ts
 ├── tests/
-│   └── example.spec.ts
+│   └── atividade.spec.ts
 └── .github/
     └── workflows/
         └── playwright.yml

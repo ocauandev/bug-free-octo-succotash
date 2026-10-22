@@ -252,4 +252,50 @@ async function acessarTransferenciaPeloMenu(page: Page) {
 }
 
 test.describe('Novos testes de transferência', () => {
+
+
+  test('Realizar tranferencia para a propria conta', async ({ page }) => {
+    await login(page);
+    const conta = (await page.getByText(/Conta digital: \d+-\d+/).textContent())?.match(/(\d+)-(\d+)/);
+    if (!conta) throw new Error('Número da conta não encontrado na home');
+    await acessarTransferenciaPeloMenu(page);
+
+    await page.locator('input[name="accountNumber"]').fill(conta[1]);
+    await page.locator('input[name="digit"]').fill(conta[2]);
+    await page.locator('input[name="transferValue"]').fill('10');
+    await page.locator('input[name="description"]').fill('Teste de transferência');
+
+    await expect(page.locator('input[name="accountNumber"]')).toHaveValue(conta[1]);
+    await expect(page.locator('input[name="digit"]')).toHaveValue(conta[2]);
+    await expect(page.locator('input[name="transferValue"]')).toHaveValue('10');
+  });
+
+  test('Validar o número da conta quando não informado', async ({ page }) => {
+    await login(page);
+    await acessarTransferenciaPeloMenu(page);
+
+    await page.locator('input[name="transferValue"]').fill('10');
+    await page.locator('input[name="description"]').fill('Conta não informada');
+    await page.getByRole('button', { name: 'Transferir agora' }).click();
+
+    await expect(
+      page.locator('input[name="accountNumber"]').locator('xpath=..').locator('p.input__warging')
+    ).toBeVisible();
+  });
+
+  test('Impedir transferência com valor negativo usando conta coletada', async ({ page }) => {
+    await login(page);
+    const conta = (await page.getByText(/Conta digital: \d+-\d+/).textContent())?.match(/(\d+)-(\d+)/);
+    if (!conta) throw new Error('Número da conta não encontrado na home');
+    await acessarTransferenciaPeloMenu(page);
+
+    await page.locator('input[name="accountNumber"]').fill(conta[1]);
+    await page.locator('input[name="digit"]').fill(conta[2]);
+    await page.locator('input[name="transferValue"]').fill('-50');
+    await page.locator('input[name="description"]').fill('Valor inválido');
+    await page.getByRole('button', { name: 'Transferir agora' }).click();
+
+    await expect(page.getByText(/não pode ser 0 ou valor negativo/i)).toBeVisible();
+  });
+
 });
